@@ -2,7 +2,65 @@
 //   enforcing that the description is not empty and is not longer than 500 bytes.
 //   Implement the traits required to make the tests pass too.
 
+use std::fmt::Display;
+
+#[derive(Debug, Clone)]
 pub struct TicketDescription(String);
+
+#[derive(Debug)]
+pub enum DescriptionError {
+    EmptyDescriptionError,
+    TooLongDescriptionError
+}
+
+impl Display for DescriptionError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::EmptyDescriptionError => write!(f, "The description cannot be empty"),
+            Self::TooLongDescriptionError => write!(f, "The description cannot be longer than 500 bytes")
+        }
+    }
+}
+
+impl TryFrom<String> for TicketDescription {
+    type Error = DescriptionError;
+
+    fn try_from(value: String) -> Result<Self, Self::Error> {
+        if value.len() <= 0 {
+            Err(Self::Error::EmptyDescriptionError)
+        } else if value.len() > 500 {
+            Err(Self::Error::TooLongDescriptionError)
+        } else {
+            Ok(TicketDescription(value))
+        }
+    }
+}
+
+impl TryFrom<&str> for TicketDescription {
+    type Error = DescriptionError;
+
+    fn try_from(value: &str) -> Result<Self, Self::Error> {
+        if value.len() <= 0 {
+            Err(Self::Error::EmptyDescriptionError)
+        } else if value.len() > 500 {
+            Err(Self::Error::TooLongDescriptionError)
+        } else {
+            Ok(TicketDescription(value.into()))
+        }
+    }
+}
+
+impl PartialEq<&str> for TicketDescription {
+    fn eq(&self, other: &&str) -> bool {
+        self.0 == *other
+    }
+}
+
+impl PartialEq for TicketDescription {
+    fn eq(&self, other: &Self) -> bool {
+        self.0 == other.0
+    }
+}
 
 #[cfg(test)]
 mod tests {

@@ -38,7 +38,11 @@ impl Ticket {
         }
     }
     pub fn assigned_to(&self) -> &str {
-        todo!()
+        let status = &self.status;
+        match status {
+            Status::InProgress { assigned_to } => assigned_to,
+            _ => panic!("Only `In-Progress` tickets can be assigned to someone")
+        }
     }
 }
 
@@ -71,5 +75,6 @@ mod tests {
             },
         );
         assert_eq!(ticket.assigned_to(), "Alice");
+        ticket.assigned_to();
     }
 }

@@ -30,6 +30,10 @@ impl TicketStore {
     pub fn add_ticket(&mut self, ticket: Ticket) {
         self.tickets.push(ticket);
     }
+
+    pub fn iter(&self) -> std::slice::Iter<Ticket> {
+        return self.tickets.iter();
+    }
 }
 
 #[cfg(test)]
@@ -58,5 +62,12 @@ mod tests {
         let tickets: Vec<&Ticket> = store.iter().collect();
         let tickets2: Vec<&Ticket> = store.iter().collect();
         assert_eq!(tickets, tickets2);
+
+        // let a = String::from("123");
+        // let x = String::from("345");
+        // let b = &a;
+        // a.max(x);
+        // let c = b.to_lowercase();
+        // print!("{b}, {c}");
     }
 }

@@ -8,6 +8,64 @@ enum Status {
     Done,
 }
 
+#[derive(Debug)]
+enum  StatusError {
+    WrongStatus(String)
+}
+
+impl PartialEq<String> for Status {
+    fn eq(&self, other: &String) -> bool {
+        match self {
+            Self::ToDo => {
+                other == "todo"
+            },
+            Self::InProgress => {
+                other == "inprogress"
+            },
+            Self::Done => {
+                other == "done"
+            }
+        }
+    }
+}
+
+
+impl TryFrom<String> for Status {
+    type Error = StatusError;
+
+    fn try_from(value: String) -> Result<Self, Self::Error> {
+        let mut value = value.clone();
+        value.make_ascii_lowercase();
+        if Status::ToDo == value {
+            Ok(Status::ToDo)
+        } else if Status::InProgress == value {
+            Ok(Status::InProgress)
+        } else if Status::Done == value {
+            Ok(Status::Done)
+        } else {
+            Err(StatusError::WrongStatus("Wrong status".into()))
+        }
+    }
+}
+
+impl TryFrom<&str> for Status {
+    type Error = StatusError;
+
+    fn try_from(value: &str) -> Result<Self, Self::Error> {
+        let mut value = String::from(value);
+        value.make_ascii_lowercase();
+        if Status::ToDo == value {
+            Ok(Status::ToDo)
+        } else if Status::InProgress == value {
+            Ok(Status::InProgress)
+        } else if Status::Done == value {
+            Ok(Status::Done)
+        } else {
+            Err(Self::Error::WrongStatus("Wrong status".into()))
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
